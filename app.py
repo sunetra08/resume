@@ -1,11 +1,24 @@
-from flask import Flask, request, render_template
+from flask import Flask, render_template, request
 import sqlite3
 
 app = Flask(__name__)
-DATABASE = 'responses.db'
+app.config['SECRET_KEY'] = 'your-secret-key-here'
+
+# Define database connection and cursor
+conn = sqlite3.connect('contact.db', check_same_thread=False)
+c = conn.cursor()
+
+# Create a table for the contact form responses
+c.execute('''CREATE TABLE IF NOT EXISTS contacts
+             (id INTEGER PRIMARY KEY AUTOINCREMENT,
+              name TEXT,
+              email TEXT,
+              subject TEXT,
+              message TEXT)''')
+conn.commit()
 
 @app.route('/')
-def index():
+def contact():
     return render_template('contact.html')
 
 @app.route('/submit-form', methods=['POST'])
@@ -15,13 +28,12 @@ def submit_form():
     subject = request.form['subject']
     message = request.form['message']
 
-    # Save the response to the database
-    with sqlite3.connect(DATABASE) as conn:
-        cursor = conn.cursor()
-        cursor.execute('CREATE TABLE IF NOT EXISTS responses (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, email TEXT, subject TEXT, message TEXT)')
-        cursor.execute('INSERT INTO responses (name, email, subject, message) VALUES (?, ?, ?, ?)', (name, email, subject, message))
-        conn.commit()
+    # Insert the response into the database
+    c.execute("INSERT INTO contacts (name, email, subject, message) VALUES (?, ?, ?, ?)",
+              (name, email, subject, message))
+    conn.commit()
 
-    return 'Thank you for your message!'
+    return 'Form submitted successfully!'
 
-if __
+if __name__ == '__main__':
+    app.run(debug=True)
