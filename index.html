@@ -26,6 +26,32 @@
         text-align: center;
         margin-left: 1000px;
     }
+       .typing-animation {
+        font-size: 8em;
+        font-weight: bold;
+        text-align: center;
+    }
+
+    .typing-animation span {
+        opacity: 0;
+        animation: typing 1s ease-in-out forwards;
+    }
+
+    .typing-animation span:nth-child(1) {
+        animation-delay: 0.2s;
+    }
+
+    @keyframes typing {
+        0% {
+            opacity: 0;
+            transform: translateY(10px);
+        }
+
+        100% {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
 </style>
 
 <body>
@@ -61,9 +87,15 @@
         </div>
 
         <div class="banner">
+                <div class="typing-animation">
+                <span> H</span>
+                <span>o</span>
+                <span> l</span>
+                <span>a</span>
+            </div>
             <div class="app-text">
                 <h1>
-                    <spam>Hola</spam>, I'm<br>Sunetra Ray
+                  I'm<br>Sunetra Ray
                 </h1>
                 <div class="primary-btn">
                     <div class="btn-group">
